@@ -17,8 +17,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
   && apt-get install -y netcat ${BUILD_DEPS} \
   && apt-get clean \
   && pip install --upgrade pip \
-  && pip install virtualenv pip-tools \
-  && virtualenv .venv \
+  && pip install pip-tools \
   && pip-sync requirements.txt requirements-dev.txt \
   && apt-get autoremove -y ${BUILD_DEPS} \
   && apt-get clean \

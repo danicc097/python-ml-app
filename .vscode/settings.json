@@ -1,0 +1,41 @@
+{
+  "python.linting.pylintArgs": [
+    "--init-hook='import sys; sys.path.append(\"/workspace\")'",
+    "--rcfile=setup.cfg"
+  ],
+  "terminal.integrated.env.linux": {
+    "PATH": "${env:PATH}:scripts/:bin/:frontend/scripts/:scripts/"
+  },
+  "platformSettings.autoLoad": true,
+  "platformSettings.platforms": {
+    "win32": {
+      "python.defaultInterpreterPath": ".venv/Scripts/python",
+      "python.linting.flake8Path": ".venv/Scripts/flake8",
+      "python.sortImports.path": ".venv/Scripts/isort",
+      "python.formatting.blackPath": ".venv/Scripts/black",
+      "python.linting.mypyPath": ".venv/Scripts/mypy"
+    },
+    "linux": {
+      "python.defaultInterpreterPath": ".venv/bin/python",
+      "python.linting.flake8Path": ".venv/bin/flake8",
+      "python.sortImports.path": ".venv/bin/isort",
+      "python.formatting.blackPath": ".venv/bin/black",
+      "python.linting.mypyPath": ".venv/bin/mypy"
+    }
+  },
+  "python.linting.enabled": true,
+  "python.linting.mypyEnabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": [
+    "--config=tox.ini"
+  ],
+  "python.linting.mypyArgs": [
+    "--ignore-missing-imports",
+    // "--follow-imports=silent",
+    "--show-column-numbers"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.formatting.provider": "black",
+  "typescript.tsdk": "frontend/node_modules/typescript/lib"
+}
