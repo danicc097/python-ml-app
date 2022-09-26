@@ -1,0 +1,10 @@
+uvicorn
+gunicorn
+loguru
+scikit-learn
+pandas
+ipykernel
+numpy
+psutil
+grpcio
+grpcio-tools
