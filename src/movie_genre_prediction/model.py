@@ -87,11 +87,3 @@ class MovieGenreModel(MLBaseModel):
         logger.info(predictions)
 
         return predictions
-
-
-m = MovieGenreModel()
-m.predict(
-    """
-When their kingdom becomes trapped in perpetual winter, fearless Anna (Kristen Bell) joins forces with mountaineer Kristoff (Jonathan Groff) and his reindeer sidekick to find Anna's sister, Snow Queen Elsa (Idina Menzel), and break her icy spell. Although their epic journey leads them to encounters with mystical trolls, a comedic snowman (Josh Gad), harsh conditions, and magic at every turn, Anna and Kristoff bravely push onward in a race to save their kingdom from winter's cold grip.
-"""
-)
