@@ -8,8 +8,8 @@ from loguru import logger
 
 from src.movie_genre_prediction.model import MovieGenreModel
 from src.config.loguru_setup import setup_logger_from_settings
-import src.pb.tfidf.v1.service_pb2 as service_pb2
-import src.pb.tfidf.v1.service_pb2_grpc as service_pb2_grpc
+from src.pb.tfidf.v1 import service_pb2
+from src.pb.tfidf.v1 import service_pb2_grpc
 import grpc
 
 
@@ -20,17 +20,19 @@ class MovieGenreService(service_pb2_grpc.MovieGenreServicer):
         self.model_manager = MovieGenreModel()
         self.model_manager.initialize()
 
-    def Predict(self, request, context):
-        logger.info(f"request is : {request}")
+    def Predict(self, request: service_pb2.PredictRequest, context):
         predictions = self.model_manager.predict(request.synopsis)
-        response = service_pb2.PredictReply(
+
+        return service_pb2.PredictReply(
             predictions=[service_pb2.Prediction(genre=p) for p in predictions]
         )
-        return response
 
-    def Train(self, request, context):
-        logger.info(f"request is : {request}")
+    def Train(self, request: service_pb2.TrainRequest, context):
         self.model_manager.train()
+
+        return service_pb2.TrainReply(
+            message="Successfully trained movie genre prediction model"
+        )
 
 
 setup_logger_from_settings()

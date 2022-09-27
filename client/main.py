@@ -1,7 +1,7 @@
 import json
 
-import src.pb.tfidf.v1.service_pb2 as service_pb2
-import src.pb.tfidf.v1.service_pb2_grpc as service_pb2_grpc
+from src.pb.tfidf.v1 import service_pb2
+from src.pb.tfidf.v1 import service_pb2_grpc
 import grpc
 
 channel = grpc.insecure_channel("localhost:50051")
