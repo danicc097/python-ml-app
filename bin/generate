@@ -1,7 +1,12 @@
 #!/bin/bash
 rm -rf src/pb
 mkdir -p src/pb
-python -m grpc_tools.protoc -I python-ml-app-protos --python_out=src/pb/. --grpc_python_out=src/pb/. python-ml-app-protos/tfidf/v1/service.proto
+python -m grpc_tools.protoc \
+  -I python-ml-app-protos \
+  --python_out=src/pb/. \
+  --grpc_python_out=src/pb/. \
+  --mypy_out=src/pb/. \
+  python-ml-app-protos/tfidf/v1/service.proto
 find src/pb -type d -exec touch {}/__init__.py \;
 echo "import sys
 import os

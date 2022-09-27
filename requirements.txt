@@ -46,6 +46,8 @@ matplotlib-inline==0.1.6
     # via
     #   ipykernel
     #   ipython
+mypy-protobuf==3.3.0
+    # via -r requirements.in
 nest-asyncio==1.5.5
     # via
     #   ipykernel
@@ -69,7 +71,9 @@ pickleshare==0.7.5
 prompt-toolkit==3.0.31
     # via ipython
 protobuf==3.20.2
-    # via grpcio-tools
+    # via
+    #   grpcio-tools
+    #   mypy-protobuf
 psutil==5.9.2
     # via
     #   -r requirements.in
@@ -115,6 +119,8 @@ traitlets==5.4.0
     #   jupyter-client
     #   jupyter-core
     #   matplotlib-inline
+types-protobuf==3.20.4
+    # via mypy-protobuf
 uvicorn==0.18.3
     # via -r requirements.in
 wcwidth==0.2.5
