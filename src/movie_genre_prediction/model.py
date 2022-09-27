@@ -83,7 +83,8 @@ class MovieGenreModel(MLBaseModel):
         top_indeces = np.argsort(pairwise_similarity, axis=0)[-10:]
         top_indeces = reversed(top_indeces)
         top_indeces = [i[0] for i in top_indeces]
-        predictions = self.df.iloc[top_indeces]["tags"].tolist()
+        # TODO should aggregate and return it weighting on position and count
+        predictions = list(dict.fromkeys(self.df.iloc[top_indeces]["tags"].to_list()))
         logger.info(predictions)
 
         return predictions
