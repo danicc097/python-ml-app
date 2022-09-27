@@ -1,6 +1,8 @@
 .mypy_cache/
 .pytest_cache/
 
+movies.csv
+
 **/src/tests/tmp/*
 !**/src/tests/tmp/__init__.py
 *.joblib

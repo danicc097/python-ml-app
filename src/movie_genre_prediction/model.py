@@ -28,16 +28,15 @@ class MovieGenreModel(MLBaseModel):
             self.df = pd.read_csv(
                 csv_path,
                 delimiter=",",
-                usecols=["title", "genres"],
-                converters={"genres": lambda x: x.split("|")},
+                usecols=["plot_synopsis", "tags"],
+                converters={"tags": lambda x: x.split(", ")},
             )
         except Exception as e:
-            logger.error(e)
-            raise Exception(f"Invalid csv data in {csv_path} for MovieGenreModel")
-        self.df = self.df.explode("genres")
+            raise Exception(f"Invalid csv data in {csv_path} for MovieGenreModel: {e}")
+        self.df = self.df.explode("tags")
         self.df.dropna(inplace=True)
         self.df.drop_duplicates(inplace=True)
-        self.corpus = self.df["title"].tolist()
+        self.corpus = self.df["plot_synopsis"].tolist()
 
     @func_timer
     def _vectorize_corpus(self):
@@ -50,7 +49,7 @@ class MovieGenreModel(MLBaseModel):
             max_features=500,
             lowercase=True,
             ngram_range=(1, 1),
-            stop_words=None,
+            stop_words="english",
             max_df=0.5,
             min_df=2,
             norm="l2",
@@ -73,20 +72,26 @@ class MovieGenreModel(MLBaseModel):
             self._initialized = True
             logger.info("MovieGenreModel initialized")
 
-        input_title = X.lower()
-        input_title = self.vectorizer.transform([input_title])
+        input_synopsis = X.lower()
+        input_synopsis = self.vectorizer.transform([input_synopsis])
 
-        pairwise_similarity = cosine_similarity_n_space(self.tfidf_matrix, input_title)
+        pairwise_similarity = cosine_similarity_n_space(
+            self.tfidf_matrix, input_synopsis
+        )
 
         top_indeces = np.argsort(pairwise_similarity, axis=0)[-10:]
         top_indeces = reversed(top_indeces)
         top_indeces = [i[0] for i in top_indeces]
 
-        for _, title_idx in enumerate(top_indeces):
-            logger.debug(
-                f"{self.corpus[title_idx]} ::: {pairwise_similarity[title_idx][0]}"
-            )
-        predictions = self.df.iloc[top_indeces]["genres"].tolist()
+        predictions = self.df.iloc[top_indeces]["tags"].tolist()
         logger.info(predictions)
 
         return predictions
+
+
+m = MovieGenreModel()
+m.predict(
+    """
+When their kingdom becomes trapped in perpetual winter, fearless Anna (Kristen Bell) joins forces with mountaineer Kristoff (Jonathan Groff) and his reindeer sidekick to find Anna's sister, Snow Queen Elsa (Idina Menzel), and break her icy spell. Although their epic journey leads them to encounters with mystical trolls, a comedic snowman (Josh Gad), harsh conditions, and magic at every turn, Anna and Kristoff bravely push onward in a race to save their kingdom from winter's cold grip.
+"""
+)
