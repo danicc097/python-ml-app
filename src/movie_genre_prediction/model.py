@@ -61,28 +61,28 @@ class MovieGenreModel(MLBaseModel):
 
         return self.vectorizer
 
+    def initialize(self):
+        self._get_data()
+        self.vectorizer = self.load_model(str(CWD / "vectorizer.joblib"))
+        if not self.vectorizer:
+            self.vectorizer = self.train()
+        else:
+            self._vectorize_corpus()
+        self._initialized = True
+        logger.info("MovieGenreModel initialized")
+
     def predict(self, X: str):
         if not self._initialized:
-            self._get_data()
-            self.vectorizer = self.load_model(str(CWD / "vectorizer.joblib"))
-            if not self.vectorizer:
-                self.vectorizer = self.train()
-            else:
-                self._vectorize_corpus()
-            self._initialized = True
-            logger.info("MovieGenreModel initialized")
+            self.initialize()
 
         input_synopsis = X.lower()
         input_synopsis = self.vectorizer.transform([input_synopsis])
-
         pairwise_similarity = cosine_similarity_n_space(
             self.tfidf_matrix, input_synopsis
         )
-
         top_indeces = np.argsort(pairwise_similarity, axis=0)[-10:]
         top_indeces = reversed(top_indeces)
         top_indeces = [i[0] for i in top_indeces]
-
         predictions = self.df.iloc[top_indeces]["tags"].tolist()
         logger.info(predictions)
 

@@ -1,4 +1,4 @@
-from asyncio import futures
+from concurrent import futures
 import os
 from pathlib import Path
 import time
@@ -8,27 +8,41 @@ from loguru import logger
 
 from src.movie_genre_prediction.model import MovieGenreModel
 from src.config.loguru_setup import setup_logger_from_settings
-from src.pb.tfidf.v1.service_pb2 import *
-import src.pb.tfidf.v1.service_pb2_grpc as tfidf_grpc
+import src.pb.tfidf.v1.service_pb2 as service_pb2
+import src.pb.tfidf.v1.service_pb2_grpc as service_pb2_grpc
+import grpc
 
 
-class MovieGenreService(tfidf_grpc.MovieGenreServicer):
-    def GetGenre():
-        pass
+class MovieGenreService(service_pb2_grpc.MovieGenreServicer):
+    def __init__(self) -> None:
+        super().__init__()
+        logger.info("Creating movie genre prediction service")
+        self.model_manager = MovieGenreModel()
+        self.model_manager.initialize()
+
+    def Predict(self, request, context):
+        logger.info(f"request is : {request}")
+        predictions = self.model_manager.predict(request.synopsis)
+        response = service_pb2.PredictReply(
+            predictions=[service_pb2.Prediction(genre=p) for p in predictions]
+        )
+        return response
+
+    def Train(self, request, context):
+        logger.info(f"request is : {request}")
+        self.model_manager.train()
 
 
-logger.info("Creating movie genre prediction app")
 setup_logger_from_settings()
-server = tfidf_grpc.grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-tfidf_grpc.add_MovieGenreServicer_to_server(MovieGenreService(), server)
-server.add_insecure_port("[::]:" + str(8900))
+server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+movie_genre_service = MovieGenreService()
+service_pb2_grpc.add_MovieGenreServicer_to_server(movie_genre_service, server)
+port = 50051
+server.add_insecure_port(f"[::]:{port}")
 server.start()
-print("Listening on port {}..".format(8900))
-try:
-    while True:
-        time.sleep(10000)
-except KeyboardInterrupt:
-    server.stop(0)
+logger.info(f"Listening on port {port}...")
+server.wait_for_termination()
+
 # m = MovieGenreModel()
 # m.predict(
 #     """

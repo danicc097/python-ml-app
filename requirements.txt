@@ -18,11 +18,11 @@ entrypoints==0.4
     # via jupyter-client
 executing==1.1.0
     # via stack-data
-grpcio==1.49.1
+grpcio==1.47.0
     # via
     #   -r requirements.in
     #   grpcio-tools
-grpcio-tools==1.49.1
+grpcio-tools==1.47.0
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
@@ -68,7 +68,7 @@ pickleshare==0.7.5
     # via ipython
 prompt-toolkit==3.0.31
     # via ipython
-protobuf==4.21.6
+protobuf==3.20.2
     # via grpcio-tools
 psutil==5.9.2
     # via
