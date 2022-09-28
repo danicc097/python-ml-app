@@ -12,6 +12,9 @@ from src.pb.tfidf.v1 import service_pb2
 from src.pb.tfidf.v1 import service_pb2_grpc
 import grpc
 from src.tracing.otel import configure_tracing
+from opentelemetry import baggage, trace
+
+tracer = trace.get_tracer(__name__)
 
 
 class MovieGenreService(service_pb2_grpc.MovieGenreServicer):
@@ -24,9 +27,13 @@ class MovieGenreService(service_pb2_grpc.MovieGenreServicer):
     def Predict(self, request: service_pb2.PredictRequest, context):
         predictions = self.model_manager.predict(request.synopsis)
 
-        return service_pb2.PredictReply(
-            predictions=[service_pb2.Prediction(genre=p) for p in predictions]
-        )
+        with tracer.start_span(name="MovieGenreService.Predict") as span:
+            ctx = baggage.set_baggage("foo", "bar")
+            logger.debug(f"Global context baggage: {baggage.get_all()}")
+            logger.debug(f"Span context baggage: {baggage.get_all(context=ctx)}")
+            return service_pb2.PredictReply(
+                predictions=[service_pb2.Prediction(genre=p) for p in predictions]
+            )
 
     def Train(self, request: service_pb2.TrainRequest, context):
         self.model_manager.train()

@@ -10,6 +10,11 @@ from opentelemetry.instrumentation.grpc import (
     GrpcInstrumentorClient,
     GrpcInstrumentorServer,
 )
+from opentelemetry.trace.propagation.tracecontext import TraceContextTextMapPropagator
+from opentelemetry.propagate import set_global_textmap
+from opentelemetry.baggage.propagation import W3CBaggagePropagator
+from opentelemetry.propagators.composite import CompositePropagator
+from opentelemetry.propagators.jaeger import JaegerPropagator
 
 
 def configure_tracing():
@@ -18,6 +23,14 @@ def configure_tracing():
     # https://www.jaegertracing.io/docs/1.23/apis/#thrift-over-http-stable
     jaeger_exporter = JaegerExporter(
         collector_endpoint="http://localhost:14268/api/traces"
+    )
+
+    set_global_textmap(
+        # CompositePropagator([TraceContextTextMapPropagator(), W3CBaggagePropagator()])
+        # best way to propagate between services is to use the specific jaeger propagator.
+        # alternatively Jaeger supports Zipkin B3 format and W3C Trace-Context (requires further setup)
+        # https://www.jaegertracing.io/docs/1.19/client-libraries/#propagation-format
+        JaegerPropagator()
     )
 
     provider = TracerProvider(resource=resource)

@@ -11,5 +11,6 @@ grpcio-tools==1.47.0
 mypy-protobuf
 opentelemetry-instrumentation-grpc
 opentelemetry-exporter-jaeger
+opentelemetry-propagator-jaeger
 opentelemetry-api
 opentelemetry-sdk
