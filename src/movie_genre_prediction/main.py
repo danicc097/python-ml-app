@@ -11,6 +11,7 @@ from src.config.loguru_setup import setup_logger_from_settings
 from src.pb.tfidf.v1 import service_pb2
 from src.pb.tfidf.v1 import service_pb2_grpc
 import grpc
+from src.tracing.otel import configure_tracing
 
 
 class MovieGenreService(service_pb2_grpc.MovieGenreServicer):
@@ -36,7 +37,11 @@ class MovieGenreService(service_pb2_grpc.MovieGenreServicer):
 
 
 setup_logger_from_settings()
+configure_tracing()
+
 server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+
+
 movie_genre_service = MovieGenreService()
 service_pb2_grpc.add_MovieGenreServicer_to_server(movie_genre_service, server)
 port = 50051

@@ -4,7 +4,19 @@ from src.pb.tfidf.v1 import service_pb2
 from src.pb.tfidf.v1 import service_pb2_grpc
 import grpc
 
+from src.tracing.otel import configure_tracing
+
+configure_tracing()
+
 channel = grpc.insecure_channel("localhost:50051")
+interceptors = [
+    grpc.UnaryUnaryClientInterceptor(),
+    grpc.UnaryStreamClientInterceptor(),
+    grpc.StreamUnaryClientInterceptor(),
+    grpc.StreamStreamClientInterceptor(),
+]
+channel = grpc.intercept_channel(channel, *interceptors)
+
 stub = service_pb2_grpc.MovieGenreStub(channel)
 res: service_pb2.PredictReply = stub.Predict(
     service_pb2.PredictRequest(

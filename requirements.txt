@@ -14,14 +14,19 @@ debugpy==1.6.3
     # via ipykernel
 decorator==5.1.1
     # via ipython
+deprecated==1.2.13
+    # via opentelemetry-api
 entrypoints==0.4
     # via jupyter-client
 executing==1.1.0
     # via stack-data
+googleapis-common-protos==1.56.2
+    # via opentelemetry-exporter-jaeger-proto-grpc
 grpcio==1.47.0
     # via
     #   -r requirements.in
     #   grpcio-tools
+    #   opentelemetry-exporter-jaeger-proto-grpc
 grpcio-tools==1.47.0
     # via -r requirements.in
 gunicorn==20.1.0
@@ -58,6 +63,34 @@ numpy==1.23.3
     #   pandas
     #   scikit-learn
     #   scipy
+opentelemetry-api==1.13.0
+    # via
+    #   -r requirements.in
+    #   opentelemetry-exporter-jaeger-proto-grpc
+    #   opentelemetry-exporter-jaeger-thrift
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-grpc
+    #   opentelemetry-sdk
+opentelemetry-exporter-jaeger==1.13.0
+    # via -r requirements.in
+opentelemetry-exporter-jaeger-proto-grpc==1.13.0
+    # via opentelemetry-exporter-jaeger
+opentelemetry-exporter-jaeger-thrift==1.13.0
+    # via opentelemetry-exporter-jaeger
+opentelemetry-instrumentation==0.34b0
+    # via opentelemetry-instrumentation-grpc
+opentelemetry-instrumentation-grpc==0.34b0
+    # via -r requirements.in
+opentelemetry-sdk==1.13.0
+    # via
+    #   -r requirements.in
+    #   opentelemetry-exporter-jaeger-proto-grpc
+    #   opentelemetry-exporter-jaeger-thrift
+    #   opentelemetry-instrumentation-grpc
+opentelemetry-semantic-conventions==0.34b0
+    # via
+    #   opentelemetry-instrumentation-grpc
+    #   opentelemetry-sdk
 packaging==21.3
     # via ipykernel
 pandas==1.5.0
@@ -72,6 +105,7 @@ prompt-toolkit==3.0.31
     # via ipython
 protobuf==3.20.2
     # via
+    #   googleapis-common-protos
     #   grpcio-tools
     #   mypy-protobuf
 psutil==5.9.2
@@ -104,10 +138,13 @@ six==1.16.0
     # via
     #   grpcio
     #   python-dateutil
+    #   thrift
 stack-data==0.5.1
     # via ipython
 threadpoolctl==3.1.0
     # via scikit-learn
+thrift==0.16.0
+    # via opentelemetry-exporter-jaeger-thrift
 tornado==6.2
     # via
     #   ipykernel
@@ -121,10 +158,17 @@ traitlets==5.4.0
     #   matplotlib-inline
 types-protobuf==3.20.4
     # via mypy-protobuf
+typing-extensions==4.3.0
+    # via opentelemetry-sdk
 uvicorn==0.18.3
     # via -r requirements.in
 wcwidth==0.2.5
     # via prompt-toolkit
+wrapt==1.14.1
+    # via
+    #   deprecated
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-grpc
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

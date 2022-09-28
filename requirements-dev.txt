@@ -69,5 +69,6 @@ tomli==2.0.1
     #   pytest
 typing-extensions==4.3.0
     # via
+    #   -c requirements.txt
     #   black
     #   mypy

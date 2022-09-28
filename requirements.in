@@ -9,3 +9,7 @@ psutil
 grpcio==1.47.0
 grpcio-tools==1.47.0
 mypy-protobuf
+opentelemetry-instrumentation-grpc
+opentelemetry-exporter-jaeger
+opentelemetry-api
+opentelemetry-sdk
